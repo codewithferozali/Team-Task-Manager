@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Team Task Manager — Login</title>
+  <meta name="description" content="Sign in to Team Task Manager to manage your projects and tasks."/>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="10" fill="#7c3aed"/>
+        <path d="M10 18l5 5 11-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>TaskFlow</span>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input id="login-email" type="email" class="form-input" placeholder="you@example.com" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input id="login-password" type="password" class="form-input" placeholder="••••••••" required/>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="login-btn">Sign In</button>
+      <p id="login-error" style="color:var(--danger);font-size:.85rem;margin-top:12px;display:none;"></p>
+    </form>
+
+    <!-- Signup Form -->
+    <form id="signup-form" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input id="signup-name" type="text" class="form-input" placeholder="John Doe" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input id="signup-email" type="email" class="form-input" placeholder="you@example.com" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input id="signup-password" type="password" class="form-input" placeholder="Min. 6 characters" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Register As</label>
+        <select id="signup-role" class="form-input">
+          <option value="MEMBER">Member (Default)</option>
+          <option value="ADMIN">Administrator</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="signup-btn">Create Account</button>
+      <p id="signup-error" style="color:var(--danger);font-size:.85rem;margin-top:12px;display:none;"></p>
+    </form>
+  </div>
+</div>
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Dashboard — TaskFlow</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+          <path d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <span>TaskFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Menu</div>
+        <a href="/dashboard.html" class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="/tasks.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Tasks
+        </a>
+        <a href="/projects.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          Projects
+        </a>
+        <a href="/admin.html" class="nav-link admin-only">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          Admin
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-info">
+        <div class="user-avatar" id="sidebar-avatar">TU</div>
+        <div>
+          <div class="user-name" id="sidebar-name">User</div>
+          <div class="user-role" id="sidebar-role">MEMBER</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="overlay-bg" id="overlay-bg"></div>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn-icon menu-btn" id="menu-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" onclick="openModal('task-modal')">+ New Task</button>
+        <button class="btn btn-secondary btn-sm" id="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <div class="page">
+      <!-- Stats -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(124,58,237,.15)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div><div class="stat-value" id="stat-total">—</div><div class="stat-label">Total Tasks</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,.15)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="stat-value" id="stat-done">—</div><div class="stat-label">Completed</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(239,68,68,.15)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div><div class="stat-value" id="stat-overdue">—</div><div class="stat-label">Overdue</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(245,158,11,.15)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div><div><div class="stat-value" id="stat-projects">—</div><div class="stat-label">Projects</div></div></div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Task Status Distribution</div>
+          <div class="chart-wrap"><canvas id="status-chart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Task Overview</div>
+          <div class="chart-wrap"><canvas id="overview-chart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Recent Tasks -->
+      <div class="card">
+        <div class="page-header" style="margin-bottom:16px">
+          <h2 style="font-size:1rem;font-weight:700">Recent Tasks</h2>
+          <a href="/tasks.html" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+        <div id="recent-tasks"><div class="empty"><p>Loading…</p></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- New Task Modal -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Create New Task</span>
+      <button class="btn-icon" onclick="closeModal('task-modal')">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Title *</label><input id="t-title" class="form-input" placeholder="Task title"/></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea id="t-desc" class="form-input" rows="3" placeholder="Optional description"></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label class="form-label">Priority</label>
+        <select id="t-priority" class="form-input"><option value="LOW">Low</option><option value="MEDIUM" selected>Medium</option><option value="HIGH">High</option></select></div>
+      <div class="form-group"><label class="form-label">Due Date</label><input id="t-due" type="date" class="form-input"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Project</label><select id="t-project" class="form-input"><option value="">— None —</option></select></div>
+    <div class="form-group"><label class="form-label">Assign To</label><select id="t-assign" class="form-input"><option value="">— Unassigned —</option></select></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('task-modal')">Cancel</button>
+      <button class="btn btn-primary" id="task-save-btn" onclick="saveTask()">Create Task</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

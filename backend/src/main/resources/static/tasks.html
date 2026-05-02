@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Tasks — TaskFlow</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 13l4 4 11-11"/></svg></div>
+      <span>TaskFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Menu</div>
+        <a href="/dashboard.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+        <a href="/tasks.html" class="nav-link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks</a>
+        <a href="/projects.html" class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Projects</a>
+        <a href="/admin.html" class="nav-link admin-only"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Admin</a>
+      </div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-info">
+        <div class="user-avatar" id="sidebar-avatar">TU</div>
+        <div><div class="user-name" id="sidebar-name">User</div><div class="user-role" id="sidebar-role">MEMBER</div></div>
+      </div>
+    </div>
+  </aside>
+  <div class="overlay-bg" id="overlay-bg"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn-icon menu-btn" id="menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <span class="topbar-title">Tasks</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" onclick="openTaskModal()">+ New Task</button>
+        <button class="btn btn-secondary btn-sm" id="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <div class="page">
+      <!-- Filters -->
+      <div class="filters">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="search" type="text" placeholder="Search tasks…" oninput="filterTasks()"/>
+        </div>
+        <select class="form-input" id="filter-priority" style="width:140px" onchange="filterTasks()">
+          <option value="">All Priorities</option>
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
+        </select>
+        <select class="form-input" id="filter-project" style="width:160px" onchange="filterTasks()">
+          <option value="">All Projects</option>
+        </select>
+      </div>
+
+      <!-- Kanban Board -->
+      <div class="kanban">
+        <div class="kanban-col" id="col-todo" ondragover="event.preventDefault();this.querySelector('.kanban-drop').classList.add('drag-over')" ondragleave="this.querySelector('.kanban-drop').classList.remove('drag-over')" ondrop="drop(event,'TODO')">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title"><span style="width:10px;height:10px;border-radius:50%;background:#64748b;display:inline-block"></span>To Do</span>
+            <span class="kanban-count" id="count-todo">0</span>
+          </div>
+          <div class="kanban-drop" id="drop-todo"></div>
+        </div>
+        <div class="kanban-col" id="col-progress" ondragover="event.preventDefault();this.querySelector('.kanban-drop').classList.add('drag-over')" ondragleave="this.querySelector('.kanban-drop').classList.remove('drag-over')" ondrop="drop(event,'IN_PROGRESS')">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title"><span style="width:10px;height:10px;border-radius:50%;background:#06b6d4;display:inline-block"></span>In Progress</span>
+            <span class="kanban-count" id="count-progress">0</span>
+          </div>
+          <div class="kanban-drop" id="drop-progress"></div>
+        </div>
+        <div class="kanban-col" id="col-done" ondragover="event.preventDefault();this.querySelector('.kanban-drop').classList.add('drag-over')" ondragleave="this.querySelector('.kanban-drop').classList.remove('drag-over')" ondrop="drop(event,'COMPLETED')">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title"><span style="width:10px;height:10px;border-radius:50%;background:#10b981;display:inline-block"></span>Completed</span>
+            <span class="kanban-count" id="count-done">0</span>
+          </div>
+          <div class="kanban-drop" id="drop-done"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Task Modal -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="task-modal-title">New Task</span>
+      <button class="btn-icon" onclick="closeModal('task-modal')">✕</button>
+    </div>
+    <input type="hidden" id="edit-task-id"/>
+    <div class="form-group"><label class="form-label">Title *</label><input id="t-title" class="form-input" placeholder="Task title"/></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea id="t-desc" class="form-input" rows="3" placeholder="Optional description"></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label class="form-label">Priority</label>
+        <select id="t-priority" class="form-input"><option value="LOW">Low</option><option value="MEDIUM" selected>Medium</option><option value="HIGH">High</option></select></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select id="t-status" class="form-input"><option value="TODO">To Do</option><option value="IN_PROGRESS">In Progress</option><option value="COMPLETED">Completed</option></select></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label class="form-label">Due Date</label><input id="t-due" type="date" class="form-input"/></div>
+      <div class="form-group"><label class="form-label">Project</label><select id="t-project" class="form-input"><option value="">— None —</option></select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Assign To</label><select id="t-assign" class="form-input"><option value="">— Unassigned —</option></select></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('task-modal')">Cancel</button>
+      <button class="btn btn-primary" id="task-save-btn" onclick="saveTask()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/tasks.js"></script>
+</body>
+</html>
